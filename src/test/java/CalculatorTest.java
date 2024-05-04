@@ -10,9 +10,18 @@ class CalculatorTest {
     @Test
     @DisplayName("Test 6/2 = 3")
     void testIntegerDivision_whenSixIsDividedByTwo_shouldReturnThree() {
+
+        // Arrange
         Calculator calculator = new Calculator();
-        int result = calculator.integerDivision(6, 2);
-        assertEquals(3, result, "6/2 did not produce 3");
+        int expectedResult = 3;
+        int dividend = 6;
+        int divisor = 2;
+
+        // Act
+        int actualResult = calculator.integerDivision(dividend, divisor);
+
+        // Assert
+        assertEquals(expectedResult, actualResult, "6/2 did not produce 3");
     }
 
     @Test
