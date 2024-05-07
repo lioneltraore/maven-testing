@@ -1,10 +1,32 @@
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test math operations in Calculator class")
 class CalculatorTest {
+
+    Calculator calculator;
+
+    @BeforeAll
+    static void setup() {
+        System.out.println("Executing @BeforeAll method");
+    }
+
+    @AfterAll
+    static void cleanup() {
+        System.out.println("Executing @AfterAll method");
+    }
+
+    @BeforeEach
+    void beforeEachTestMethod() {
+        System.out.println("Executing @BeforeEach method");
+        calculator = new Calculator();
+    }
 
     // test<System under test>_<Condition or state change>_<Expected result>
     @Test
@@ -12,7 +34,6 @@ class CalculatorTest {
     void testIntegerDivision_whenSixIsDividedByTwo_shouldReturnThree() {
 
         // Arrange
-        Calculator calculator = new Calculator();
         int expectedResult = 3;
         int dividend = 6;
         int divisor = 2;
@@ -27,14 +48,35 @@ class CalculatorTest {
     @Test
     @DisplayName("Division by zero")
     void testIntegerDivision_whenDividendIsDividedByZero_shouldThrowArithmeticException() {
-        fail("Not implemented");
+        // Arrange
+        int divisor = 0;
+        int dividend = 10;
+        String expectedExceptionMessage = "/ by zero";
+
+
+        // Act & Assert
+        ArithmeticException actualException = assertThrows(ArithmeticException.class, ()-> {
+            // Act
+            calculator.integerDivision(dividend, divisor);
+        }, "Division by zero should throw ArithmeticException");
+
+        // Assert
+        assertEquals(expectedExceptionMessage, actualException.getMessage(), "Unexpected exception");
     }
 
-    @Test
-    @DisplayName("Test 15-5 = 10")
-    void integerSubstraction() {
-        Calculator calculator = new Calculator();
-        int result = calculator.integerSubstraction(15, 5);
-        assertEquals(10, result);
+    @DisplayName("Test integer substraction [minuend, substrahend, expectedResult]")
+    @ParameterizedTest
+    @MethodSource
+    void integerSubstraction(int minuend, int substrahend, int expectedResult) {
+        int actualResult = calculator.integerSubstraction(minuend, substrahend);
+        assertEquals(expectedResult, actualResult, ()-> minuend + " - " + substrahend + " = " + expectedResult);
+    }
+
+    private static Stream<Arguments> integerSubstraction() {
+        return Stream.of(
+                Arguments.of(33, 1, 32),
+                Arguments.of(54, 4, 50),
+                Arguments.of(15, 5, 10)
+        );
     }
 }
