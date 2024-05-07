@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
@@ -78,5 +79,13 @@ class CalculatorTest {
                 Arguments.of(54, 4, 50),
                 Arguments.of(15, 5, 10)
         );
+    }
+
+    @DisplayName("Test integer multiplication [multiplicand, multiplicator, expectedResult]")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/integerMultiplication.csv")
+    void integerMultiplication(int multiplicand, int multiplicator, int expectedResult) {
+        int actualResult = calculator.integerMultiplication(multiplicand, multiplicator);
+        assertEquals(expectedResult, actualResult, ()-> multiplicand + " * " + multiplicator + " = " + expectedResult);
     }
 }
